@@ -1,0 +1,32 @@
+<div class="carrito-container" *ngIf="productos.length > 0; else vacio">
+    <div class="card" *ngFor="let producto of productos; let i = index">
+      <div class="card-info">
+        <div class="texto">
+          <h3>{{ producto.nombre }}</h3>
+          <p><strong>Marca:</strong> {{ producto.marca }}</p>
+          <p><strong>Precio unitario:</strong> {{ producto.precioUnitario | currency:'USD' }}</p>
+          <p><strong>Cantidad:</strong> {{ producto.cantidad }}</p>
+          <p><strong>Total por producto:</strong> {{ producto.precioUnitario * producto.cantidad | currency:'USD' }}</p>
+  
+          <div class="cantidad-controls">
+            <button (click)="disminuirCantidad(i)">-</button>
+            <button (click)="aumentarCantidad(i)">+</button>
+          </div>
+        </div>
+        <div class="imagen">
+          <img src="/assets/mermeladas-caseras.png" alt="Imagen del producto">
+        </div>
+      </div>
+    </div>
+  
+    <div class="total-compra">
+      <p><strong>Total de la compra:</strong> {{ obtenerTotal() | currency:'USD' }}</p>
+    </div>
+  
+    <button class="comprar-button">Comprar</button>
+  </div>
+  
+  <ng-template #vacio>
+    <p class="vacio">El carrito está vacío.</p>
+  </ng-template>
+  

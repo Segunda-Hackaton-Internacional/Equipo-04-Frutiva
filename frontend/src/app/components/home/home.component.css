@@ -1,0 +1,72 @@
+.home {
+    /* 1) degradado blanco→transparente (0‑40% blanco, 40‑80% fade out) y luego la imagen */
+    background:
+      linear-gradient(
+        to right,
+        #fff 40%,
+        rgba(255,255,255,0) 80%
+      ),
+      url('/assets/fondo_home.jpg') center/cover no-repeat;
+  
+    /* 2) alineación flex para que el texto quede a la izquierda */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  
+    /* 3) un poco de padding por la izquierda */
+    padding: 0 5%;
+  
+    min-height: 95vh;  /* ajusta según prefieras */
+    margin-top: 5px;   /* si tienes header fijo */
+    position: relative;
+  }
+  
+  .home .container {
+    position: relative;
+    z-index: 1;        /* para que el texto esté sobre el degradado */
+  }
+  
+  .home-content {
+    max-width: 500px;  /* controla hasta dónde llega el texto */
+    text-align: left;  /* importante para alinear a la izquierda */
+  }
+  .main-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+  
+  .subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 1rem;
+    padding: 0 ;
+  }
+  
+  .cta-button {
+    background-color: #a06d2b;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color .3s;
+  }
+  .cta-button:hover {
+    background-color: #785221;
+  }
+  
+  /* responsive (idéntico a tu original) */
+  @media (max-width: 768px) {
+    .main-title { font-size: 2.5rem; padding: 0 10px; }
+    .subtitle   { font-size: 1rem; padding: 0 15px; }
+    .home       { min-height: 50vh; }
+  }
+  @media (max-width: 480px) {
+    .main-title { font-size: 2rem; }
+    .home       { min-height: 45vh; }
+  }
+  

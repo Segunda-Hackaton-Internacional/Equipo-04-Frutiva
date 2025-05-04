@@ -1,0 +1,35 @@
+<div class="detalle-container" *ngIf="producto">
+    <div class="imagen">
+      <img src="/assets/foto_generica.png" alt="Imagen del producto">
+    </div>
+  
+    <div class="info">
+      <h2>{{ producto.nombre }}</h2>
+      <p><strong>SKU:</strong> {{ producto.sku }}</p>
+      <p><strong>Marca:</strong> {{ producto.marca }}</p>
+      <p><strong>Modelo:</strong> {{ producto.modelo }}</p>
+      <p><strong>Categoría:</strong> {{ producto.categoria }}</p>
+      <p><strong>Color:</strong> {{ producto.color }}</p>
+      <p><strong>Material:</strong> {{ producto.material }}</p>
+      <p><strong>Dimensiones (L×A×H):</strong> {{ producto.largo }} × {{ producto.ancho }} × {{ producto.alto }} cm</p>
+      <p><strong>Peso neto:</strong> {{ producto.pesoNeto }} kg</p>
+      <p><strong>Peso bruto:</strong> {{ producto.pesoBruto }} kg</p>
+      <p><strong>Stock disponible:</strong> {{ producto.stock }}</p>
+      <p><strong>Origen:</strong> {{ producto.origen }}</p>
+      <p><strong>Proveedor:</strong> {{ producto.proveedor }}</p>
+      <p><strong>Fecha de fabricación:</strong> {{ producto.fechaFabricacion | date }}</p>
+      <p><strong>Fecha de caducidad:</strong> {{ producto.fechaCaducidad | date }}</p>
+      <p><strong>Garantía (meses):</strong> {{ producto.garantia }}</p>
+      <p><strong>Precio unitario:</strong> {{ producto.precioUnitario | currency:'USD' }}</p>
+      <p><strong>Descuento:</strong> {{ producto.descuentoPorcentaje }}%</p>
+      <p><strong>Cantidad mínima:</strong> {{ producto.cantidadMinima }}</p>
+      <p><strong>Precio por mayor:</strong> {{ producto.precioPorMayor | currency:'USD' }}</p>
+      <p><strong>Unidades por paquete:</strong> {{ producto.unidadesPorPaquete }}</p>
+      <p><strong>Tipo de empaque:</strong> {{ producto.tipoEmpaque }}</p>
+      <p><strong>Número de lote:</strong> {{ producto.numeroLote }}</p>
+      <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
+  
+      <button class="agregar-button" (click)="agregarAlCarrito()">Agregar al carrito</button>
+    </div>
+  </div>
+  

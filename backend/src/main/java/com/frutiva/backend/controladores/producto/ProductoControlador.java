@@ -76,7 +76,7 @@ public class ProductoControlador {
         return ResponseEntity.noContent().build();
     }
 
-     @GetMapping("/filter")
+    @GetMapping("/filter")
     public ResponseEntity<List<ProductoDTO>> filtrar(
         @RequestParam(required = false) String sku,
         @RequestParam(required = false) String nombre,
@@ -98,6 +98,8 @@ public class ProductoControlador {
         @RequestParam(required = false) String proveedor,
         @RequestParam(required = false) Integer garantia,
         @RequestParam(required = false) Double precioUnitario,
+        @RequestParam(required = false) Double precioMinimo,
+        @RequestParam(required = false) Double precioMaximo,
         @RequestParam(required = false) Integer cantidadMinima,
         @RequestParam(required = false) Double precioPorMayor,
         @RequestParam(required = false) Integer unidadesPorPaquete,
@@ -109,16 +111,19 @@ public class ProductoControlador {
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+    
         List<ProductoDTO> resultados = productoServicio.filtrar(
             sku, nombre, marca, modelo, categoria,
             stock, descripcion, pesoNeto, pesoBruto,
             largo, ancho, alto, color, material,
             fechaFabricacion, fechaCaducidad,
             origen, proveedor, garantia,
-            precioUnitario, cantidadMinima, precioPorMayor,
+             precioMinimo, precioMaximo,
+            cantidadMinima, precioPorMayor,
             unidadesPorPaquete, tipoEmpaque,
             numeroLote, descuentoPorcentaje
         );
         return ResponseEntity.ok(resultados);
     }
+    
 }

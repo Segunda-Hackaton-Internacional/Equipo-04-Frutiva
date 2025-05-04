@@ -1,14 +1,18 @@
 package com.frutiva.backend.servicios.producto;
 
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.regex.Pattern;
+import jakarta.persistence.criteria.Expression;
+
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.frutiva.backend.dtos.producto.ProductoDTO;
+import com.frutiva.backend.dtos.producto.ProductoDTO; // Update to the correct package path
 import com.frutiva.backend.dtos.usuario.UsuarioAuxDTO;
 import com.frutiva.backend.modelos.producto.Producto;
 import com.frutiva.backend.modelos.usuario.Usuario;
@@ -126,93 +130,176 @@ public class ProductoServicio {
         return repo.findById(id).map(this::convertToDto);
     }
 
+ 
+  
     public List<ProductoDTO> filtrar(
-        String sku,
-        String nombre,
-        String marca,
-        String modelo,
-        String categoria,
-        Long stock,
-        String descripcion,
-        Double pesoNeto,
-        Double pesoBruto,
-        Double largo,
-        Double ancho,
-        Double alto,
-        String color,
-        String material,
-        LocalDate fechaFabricacion,
-        LocalDate fechaCaducidad,
-        String origen,
-        String proveedor,
-        Integer garantia,
-        Double precioUnitario,
-        Integer cantidadMinima,
-        Double precioPorMayor,
-        Integer unidadesPorPaquete,
-        String tipoEmpaque,
-        String numeroLote,
-        Integer descuentoPorcentaje
+            String sku,
+            String nombre,
+            String marca,
+            String modelo,
+            String categoria,
+            Long stock,
+            String descripcion,
+            Double pesoNeto,
+            Double pesoBruto,
+            Double largo,
+            Double ancho,
+            Double alto,
+            String color,
+            String material,
+            LocalDate fechaFabricacion,
+            LocalDate fechaCaducidad,
+            String origen,
+            String proveedor,
+            Integer garantia,
+            Double precioMinimo,
+            Double precioMaximo,
+            Integer cantidadMinima,
+            Double precioPorMayor,
+            Integer unidadesPorPaquete,
+            String tipoEmpaque,
+            String numeroLote,
+            Integer descuentoPorcentaje
     ) {
         Specification<Producto> spec = Specification.where(null);
 
-        if (sku != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("sku"), sku));
-        if (nombre != null)
-            spec = spec.and((r, q, cb) -> cb.like(r.get("nombre"), "%" + nombre + "%"));
-        if (marca != null)
-            spec = spec.and((r, q, cb) -> cb.like(r.get("marca"), "%" + marca + "%"));
-        if (modelo != null)
-            spec = spec.and((r, q, cb) -> cb.like(r.get("modelo"), "%" + modelo + "%"));
-        if (categoria != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("categoria"), categoria));
-        if (stock != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("stock"), stock));
-        if (descripcion != null)
-            spec = spec.and((r, q, cb) -> cb.like(r.get("descripcion"), "%" + descripcion + "%"));
-        if (pesoNeto != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("pesoNeto"), pesoNeto));
-        if (pesoBruto != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("pesoBruto"), pesoBruto));
-        if (largo != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("largo"), largo));
-        if (ancho != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("ancho"), ancho));
-        if (alto != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("alto"), alto));
-        if (color != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("color"), color));
-        if (material != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("material"), material));
-        if (fechaFabricacion != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("fechaFabricacion"), fechaFabricacion));
-        if (fechaCaducidad != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("fechaCaducidad"), fechaCaducidad));
-        if (origen != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("origen"), origen));
-        if (proveedor != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("proveedor"), proveedor));
-        if (garantia != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("garantia"), garantia));
-        if (precioUnitario != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("precioUnitario"), precioUnitario));
-        if (cantidadMinima != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("cantidadMinima"), cantidadMinima));
-        if (precioPorMayor != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("precioPorMayor"), precioPorMayor));
-        if (unidadesPorPaquete != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("unidadesPorPaquete"), unidadesPorPaquete));
-        if (tipoEmpaque != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("tipoEmpaque"), tipoEmpaque));
-        if (numeroLote != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("numeroLote"), numeroLote));
-        if (descuentoPorcentaje != null)
-            spec = spec.and((r, q, cb) -> cb.equal(r.get("descuentoPorcentaje"), descuentoPorcentaje));
+        // SKU (case‐ & accent‐insensitive LIKE)
+        if (sku != null && !sku.isBlank()) {
+            String norm = normalize(sku).toLowerCase();
+            spec = spec.and((root, query, cb) -> {
+                Expression<String> db = cb.function(
+                    "unaccent", String.class,
+                    cb.lower(root.get("sku"))
+                );
+                return cb.like(db, "%" + norm + "%");
+            });
+        }
 
-        return repo.findAll(spec)
-                   .stream()
-                   .map(p -> modelMapper.map(p, ProductoDTO.class))
+        // Nombre (case‐ & accent‐insensitive LIKE)
+        if (nombre != null && !nombre.isBlank()) {
+            String norm = normalize(nombre).toLowerCase();
+            spec = spec.and((root, query, cb) -> {
+                Expression<String> db = cb.function(
+                    "unaccent", String.class,
+                    cb.lower(root.get("nombre"))
+                );
+                return cb.like(db, "%" + norm + "%");
+            });
+        }
+
+        // Marca (case‐ & accent‐insensitive LIKE)
+        if (marca != null && !marca.isBlank()) {
+            String norm = normalize(marca).toLowerCase();
+            spec = spec.and((root, query, cb) -> {
+                Expression<String> db = cb.function(
+                    "unaccent", String.class,
+                    cb.lower(root.get("marca"))
+                );
+                return cb.like(db, "%" + norm + "%");
+            });
+        }
+
+        // Modelo (simple LIKE)
+        if (modelo != null && !modelo.isBlank()) {
+            spec = spec.and((r, q, cb) -> 
+                cb.like(r.get("modelo"), "%" + modelo + "%")
+            );
+        }
+
+        // Categoría (case‐ & accent‐insensitive equality)
+        if (categoria != null && !categoria.isBlank()) {
+            String norm = normalize(categoria).toLowerCase();
+            spec = spec.and((root, query, cb) -> {
+                Expression<String> db = cb.function(
+                    "unaccent", String.class,
+                    cb.lower(root.get("categoria"))
+                );
+                return cb.equal(db, norm);
+            });
+        }
+
+        // Descripción (simple LIKE)
+        if (descripcion != null && !descripcion.isBlank()) {
+            spec = spec.and((r, q, cb) -> 
+                cb.like(r.get("descripcion"), "%" + descripcion + "%")
+            );
+        }
+
+        // Rangos y exactitudes
+        if (stock != null) {
+            spec = spec.and((r, q, cb) -> cb.equal(r.get("stock"), stock));
+        }
+        if (pesoNeto != null) {
+            spec = spec.and((r, q, cb) -> cb.equal(r.get("pesoNeto"), pesoNeto));
+        }
+        if (pesoBruto != null) {
+            spec = spec.and((r, q, cb) -> cb.equal(r.get("pesoBruto"), pesoBruto));
+        }
+        if (largo != null) {
+            spec = spec.and((r, q, cb) -> cb.equal(r.get("largo"), largo));
+        }
+        if (ancho != null) {
+            spec = spec.and((r, q, cb) -> cb.equal(r.get("ancho"), ancho));
+        }
+        if (alto != null) {
+            spec = spec.and((r, q, cb) -> cb.equal(r.get("alto"), alto));
+        }
+        if (fechaFabricacion != null) {
+            spec = spec.and((r, q, cb) -> cb.equal(r.get("fechaFabricacion"), fechaFabricacion));
+        }
+        if (fechaCaducidad != null) {
+            spec = spec.and((r, q, cb) -> cb.equal(r.get("fechaCaducidad"), fechaCaducidad));
+        }
+        if (origen != null && !origen.isBlank()) {
+            spec = spec.and((r, q, cb) -> cb.equal(r.get("origen"), origen));
+        }
+        if (proveedor != null && !proveedor.isBlank()) {
+            spec = spec.and((r, q, cb) -> cb.equal(r.get("proveedor"), proveedor));
+        }
+        if (garantia != null) {
+            spec = spec.and((r, q, cb) -> cb.equal(r.get("garantia"), garantia));
+        }
+
+        // Precio unitario en rango [min, max]
+        if (precioMinimo != null) {
+            spec = spec.and((r, q, cb) -> 
+                cb.greaterThanOrEqualTo(r.get("precioUnitario"), precioMinimo)
+            );
+        }
+        if (precioMaximo != null) {
+            spec = spec.and((r, q, cb) -> 
+                cb.lessThanOrEqualTo(r.get("precioUnitario"), precioMaximo)
+            );
+        }
+
+        if (cantidadMinima != null) {
+            spec = spec.and((r, q, cb) -> cb.equal(r.get("cantidadMinima"), cantidadMinima));
+        }
+        if (precioPorMayor != null) {
+            spec = spec.and((r, q, cb) -> cb.equal(r.get("precioPorMayor"), precioPorMayor));
+        }
+        if (unidadesPorPaquete != null) {
+            spec = spec.and((r, q, cb) -> cb.equal(r.get("unidadesPorPaquete"), unidadesPorPaquete));
+        }
+        if (tipoEmpaque != null && !tipoEmpaque.isBlank()) {
+            spec = spec.and((r, q, cb) -> cb.equal(r.get("tipoEmpaque"), tipoEmpaque));
+        }
+        if (numeroLote != null && !numeroLote.isBlank()) {
+            spec = spec.and((r, q, cb) -> cb.equal(r.get("numeroLote"), numeroLote));
+        }
+        if (descuentoPorcentaje != null) {
+            spec = spec.and((r, q, cb) -> cb.equal(r.get("descuentoPorcentaje"), descuentoPorcentaje));
+        }
+
+        return repo.findAll(spec).stream()
+                   .map(this::convertToDto)
                    .collect(Collectors.toList());
+    }
+
+    private static String normalize(String input) {
+        String nfd = Normalizer.normalize(input, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(nfd).replaceAll("");
     }
     
 }

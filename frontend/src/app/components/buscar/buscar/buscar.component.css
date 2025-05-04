@@ -1,0 +1,146 @@
+/* Contenedor principal: dos columnas */
+.buscar-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Columna de filtros */
+.filters {
+  flex: 0 0 250px;
+  max-height: calc(100vh - 200px); /* ajuste para header+footer */
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+/* Cada panel colapsable */
+.filters details {
+  margin-bottom: 12px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+.filters summary {
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.filters input {
+  width: 100%;
+  padding: 6px;
+  margin-top: 4px;
+  box-sizing: border-box;
+}
+
+/* Columna de productos */
+.products {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+/* Tarjeta de producto */
+.product-item {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 12px;
+  background: #fff;
+}
+
+.product-item h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.product-item p {
+  margin: 0;
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Mensaje cuando no hay resultados */
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #777;
+  font-style: italic;
+}
+
+.range-inputs {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.range-inputs input {
+  width: 50%;
+  box-sizing: border-box;
+  padding: 6px;
+}
+
+/* Tarjeta estilo fila */
+.product-card {
+  display: flex;
+  align-items: flex-start;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 12px;
+  background-color: #fff;
+  width: 100%;
+  box-sizing: border-box;
+  gap: 16px;
+}
+
+/* Imagen del producto */
+.product-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* Información del producto */
+.product-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+  position: relative;
+}
+
+/* Precio del producto */
+.precio {
+  font-weight: bold;
+  color: #333;
+  margin-top: 4px;
+}
+
+/* Contenedor del botón de compra */
+.buy-container {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+/* Botón de compra */
+.buy-button {
+  background-color: #bca91dd5;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.buy-button:hover {
+  background-color: #bc7a1dd5;
+}
+

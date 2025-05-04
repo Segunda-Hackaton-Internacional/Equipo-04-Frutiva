@@ -1,0 +1,44 @@
+<nav class="nav">
+    <div class="nav-content">
+      <!-- 1) Logo siempre -->
+      <a class="nav-item logo" (click)="irHome()">
+        <img src="/assets/Frutiva_logo2.png" alt="Frutiva" />
+      </a>
+  
+      <!-- 2) Solo si está logueado -->
+      <a *ngIf="isLoggedIn" class="nav-item" (click)="irExplorar()">Explorar</a>
+      <a *ngIf="isLoggedIn" class="nav-item" (click)="irPedidos()">Pedidos</a>
+      <a *ngIf="isLoggedIn" class="nav-item" (click)="irCarrito()">Carrito</a>
+
+  
+      <!-- 3) Si NO está logueado, muestro Iniciar y Registrarse -->
+      <button
+        *ngIf="!isLoggedIn"
+        class="nav-item btn-outline"
+        (click)="irLogin()"
+      >
+        Iniciar Sesión
+      </button>
+      <button
+        *ngIf="!isLoggedIn"
+        class="nav-item btn-outline"
+        (click)="irRegister()"
+      >
+        Registrarse
+      </button>
+  
+      <!-- 4) Si está logueado, muestro Logout al final -->
+      <button
+        *ngIf="isLoggedIn"
+        class="nav-item btn-outline"
+        (click)="logout()"
+      >
+        <img
+          src="/assets/logout.png"
+          alt="Logout"
+          class="logout-icon"
+        />
+      </button>
+    </div>
+  </nav>
+  

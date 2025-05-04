@@ -1,0 +1,27 @@
+<div class="pedidos-container" *ngIf="pedidos.length > 0; else sinPedidos">
+    <div class="pedido-card" *ngFor="let pedido of pedidos">
+      <div class="pedido-header">
+        <h3>Pedido #{{ pedido.id }}</h3>
+        <span class="estado">{{ pedido.estado }}</span>
+      </div>
+  
+      <div class="productos">
+        <div class="producto" *ngFor="let producto of pedido.productos">
+          <p><strong>{{ producto.nombre }}</strong></p>
+          <p>Cantidad: {{ producto.cantidad }}</p>
+          <p>Subtotal: {{ producto.cantidad * producto.precioUnitario | currency:'USD' }}</p>
+        </div>
+      </div>
+  
+      <div class="total">
+        <p><strong>Total del pedido:</strong> {{ obtenerTotalPedido(pedido) | currency:'USD' }}</p>
+      </div>
+  
+      <button class="cancelar-button" (click)="cancelarPedido(pedido.id)">Cancelar pedido</button>
+    </div>
+  </div>
+  
+  <ng-template #sinPedidos>
+    <p class="mensaje-vacio">No hay pedidos realizados aún.</p>
+  </ng-template>
+  

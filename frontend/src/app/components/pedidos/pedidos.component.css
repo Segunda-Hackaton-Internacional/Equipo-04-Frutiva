@@ -1,0 +1,72 @@
+.pedidos-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 30px;
+    max-width: 1000px;
+    margin: 40px auto;
+  }
+  
+  .pedido-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+  
+  .pedido-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .estado {
+    font-size: 0.95rem;
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+    border: 1px solid #ccc;
+  }
+  
+  .productos {
+    margin-top: 10px;
+    padding-left: 15px;
+  }
+  
+  .producto {
+    margin-bottom: 10px;
+    border-left: 4px solid #2D572C;
+    padding-left: 10px;
+  }
+  
+  .total {
+    margin-top: 15px;
+    font-weight: bold;
+  }
+  
+  .cancelar-button {
+    margin-top: 15px;
+    padding: 10px 18px;
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cancelar-button:hover {
+    background-color: #c9302c;
+  }
+  
+  .mensaje-vacio {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-top: 50px;
+    color: #777;
+  }
+  

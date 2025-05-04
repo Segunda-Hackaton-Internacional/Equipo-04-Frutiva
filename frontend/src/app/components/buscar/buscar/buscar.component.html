@@ -1,0 +1,57 @@
+<!-- buscar.component.html -->
+<div class="buscar-container">
+  <!-- Columna izquierda: filtros -->
+  <aside class="filters">
+    <form [formGroup]="form">
+      <details>
+        <summary>SKU</summary>
+        <input type="text" formControlName="sku" placeholder="Filtrar por SKU">
+      </details>
+
+      <details>
+        <summary>Nombre</summary>
+        <input type="text" formControlName="nombre" placeholder="Filtrar por nombre">
+      </details>
+
+      <details>
+        <summary>Marca</summary>
+        <input type="text" formControlName="marca" placeholder="Filtrar por marca">
+      </details>
+
+      <details>
+        <summary>Categoría</summary>
+        <input type="text" formControlName="categoria" placeholder="Filtrar por categoría">
+      </details>
+
+      <details>
+        <summary>Precio unitario</summary>
+        <div class="range-inputs">
+          <input type="number"
+                 formControlName="precioMinimo"
+                 placeholder="Mínimo">
+          <input type="number"
+                 formControlName="precioMaximo"
+                 placeholder="Máximo">
+        </div>
+      </details>
+    </form>
+  </aside>
+
+  <!-- Columna derecha: productos -->
+  <section class="products">
+    <div *ngFor="let p of productos" class="product-card">
+      <img src="assets/foto_generica.png" alt="Foto genérica" class="product-image">
+      <div class="product-info">
+        <h3>{{ p.nombre }}</h3>
+        <p class="precio">Precio: {{ p.precioUnitario | currency:'USD':'symbol':'1.2-2' }}</p>
+        <div class="buy-container">
+          <button type="button" class="buy-button" [routerLink]="['/detalles-producto', p.id]">Comprar</button>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="productos.length === 0" class="no-results">
+      No se encontraron productos con esos filtros.
+    </div>    
+  </section>
+</div>
