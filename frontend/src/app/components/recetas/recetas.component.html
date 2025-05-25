@@ -1,0 +1,216 @@
+<div class="recetas-container">
+  <!-- Header -->
+  <header class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        <span class="gradient-text">Recetas & Opiniones</span>
+        <span class="subtitle">Compartidas por nuestra comunidad</span>
+      </h1>
+      <p class="hero-description">
+        Descubre deliciosas recetas y lee opiniones auténticas sobre nuestras mermeladas artesanales de frutas exóticas
+      </p>
+    </div>
+    <div class="hero-decoration">
+      <div class="fruit-icons">
+        <span class="fruit-icon">🥭</span>
+        <span class="fruit-icon">🐉</span>
+        <span class="fruit-icon">🍇</span>
+        <span class="fruit-icon">🧡</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Filtros -->
+  <section class="filters-section">
+    <div class="filters-container">
+      <button 
+        class="filter-btn"
+        [class.active]="filtroActivo === 'todos'"
+        (click)="filtrarPorSabor('todos')">
+        <span class="filter-emoji">🌈</span>
+        Todos
+      </button>
+      <button 
+        *ngFor="let sabor of saboresDisponibles"
+        class="filter-btn"
+        [class.active]="filtroActivo === sabor.nombre"
+        [attr.data-sabor]="sabor.nombre"
+        (click)="filtrarPorSabor(sabor.nombre)">
+        <span class="filter-emoji">{{ sabor.emoji }}</span>
+        {{ sabor.nombre }}
+      </button>
+    </div>
+  </section>
+
+  <!-- Contenido Principal -->
+  <main class="main-content">
+    
+    <!-- Sección de Recetas -->
+    <section class="recipes-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="title-icon">👩‍🍳</span>
+          Recetas de la Comunidad
+        </h2>
+        <span class="recipes-count">{{ recetasFiltradas.length }} recetas encontradas</span>
+      </div>
+
+      <div class="recipes-grid">
+        <article *ngFor="let receta of recetasFiltradas" class="recipe-card">
+          <div class="recipe-image-container">
+            <img [src]="receta.imagen" [alt]="receta.titulo" class="recipe-image">
+            <div class="recipe-overlay">
+              <span class="difficulty-badge" [attr.data-difficulty]="receta.dificultad">
+                {{ receta.dificultad }}
+              </span>
+              <span class="flavor-badge" [style.background-color]="obtenerColorSabor(receta.sabor)">
+                {{ obtenerEmojiSabor(receta.sabor) }} {{ receta.sabor }}
+              </span>
+            </div>
+          </div>
+
+          <div class="recipe-content">
+            <header class="recipe-header">
+              <h3 class="recipe-title">{{ receta.titulo }}</h3>
+              <p class="recipe-description">{{ receta.descripcion }}</p>
+            </header>
+
+            <div class="recipe-meta">
+              <div class="meta-item">
+                <span class="meta-icon">⏰</span>
+                <span>{{ receta.tiempoPrep }} min</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-icon">👥</span>
+                <span>{{ receta.porciones }} porciones</span>
+              </div>
+            </div>
+
+            <div class="recipe-ingredients">
+              <h4 class="ingredients-title">Ingredientes principales:</h4>
+              <ul class="ingredients-list">
+                <li *ngFor="let ingrediente of receta.ingredientes.slice(0, 3)">
+                  {{ ingrediente }}
+                </li>
+                <li *ngIf="receta.ingredientes.length > 3" class="more-ingredients">
+                  +{{ receta.ingredientes.length - 3 }} más...
+                </li>
+              </ul>
+            </div>
+
+            <footer class="recipe-footer">
+              <div class="recipe-author">
+                <span class="author-avatar">{{ receta.usuario.avatar }}</span>
+                <div class="author-info">
+                  <span class="author-name">
+                    {{ receta.usuario.nombre }}
+                    <span *ngIf="receta.usuario.verificado" class="verified-badge">✓</span>
+                  </span>
+                  <span class="recipe-date">{{ formatearFecha(receta.fechaPublicacion) }}</span>
+                </div>
+              </div>
+
+              <div class="recipe-actions">
+                <button class="action-btn like-btn" (click)="darLike('receta', receta.id)">
+                  <span class="action-icon">❤️</span>
+                  <span>{{ receta.likes }}</span>
+                </button>
+                <button class="action-btn comment-btn">
+                  <span class="action-icon">💬</span>
+                  <span>{{ receta.comentarios }}</span>
+                </button>
+              </div>
+            </footer>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Sección de Opiniones -->
+    <section class="opinions-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="title-icon">⭐</span>
+          Opiniones de Nuestros Clientes
+        </h2>
+        <span class="opinions-count">{{ opinionesFiltradas.length }} opiniones</span>
+      </div>
+
+      <div class="opinions-grid">
+        <article *ngFor="let opinion of opinionesFiltradas" class="opinion-card">
+          <header class="opinion-header">
+            <div class="opinion-user">
+              <span class="user-avatar">{{ opinion.usuario.avatar }}</span>
+              <div class="user-info">
+                <span class="user-name">
+                  {{ opinion.usuario.nombre }}
+                  <span *ngIf="opinion.usuario.verificado" class="verified-badge">✓</span>
+                </span>
+                <div class="opinion-meta">
+                  <span class="opinion-flavor" [style.color]="obtenerColorSabor(opinion.sabor)">
+                    {{ obtenerEmojiSabor(opinion.sabor) }} {{ opinion.sabor }}
+                  </span>
+                  <span class="opinion-date">{{ formatearFecha(opinion.fecha) }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="rating-container">
+              <div class="stars">
+                <span *ngFor="let estrella of generarEstrellas(opinion.calificacion)" 
+                      class="star" 
+                      [class.filled]="estrella === '★'">
+                  {{ estrella }}
+                </span>
+              </div>
+              <span class="rating-text">{{ opinion.calificacion }}/5</span>
+            </div>
+          </header>
+
+          <div class="opinion-content">
+            <p class="opinion-text">{{ opinion.comentario }}</p>
+            
+            <div *ngIf="opinion.imagenes" class="opinion-images">
+              <img *ngFor="let imagen of opinion.imagenes" 
+                   [src]="imagen" 
+                   alt="Imagen de la opinión" 
+                   class="opinion-image">
+            </div>
+          </div>
+
+          <footer class="opinion-footer">
+            <button class="action-btn like-btn" (click)="darLike('opinion', opinion.id)">
+              <span class="action-icon">👍</span>
+              <span>{{ opinion.likes }}</span>
+            </button>
+            <button class="action-btn helpful-btn">
+              <span class="action-icon">💡</span>
+              <span>Útil</span>
+            </button>
+          </footer>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Call to Action -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2 class="cta-title">¿Tienes una receta especial?</h2>
+      <p class="cta-description">
+        Comparte tu creatividad con nuestra comunidad y inspira a otros cocineros
+      </p>
+      <div class="cta-buttons">
+        <button class="cta-btn primary">
+          <span class="btn-icon">📝</span>
+          Compartir Receta
+        </button>
+        <button class="cta-btn secondary">
+          <span class="btn-icon">⭐</span>
+          Dejar Opinión
+        </button>
+      </div>
+    </div>
+  </section>
+</div>

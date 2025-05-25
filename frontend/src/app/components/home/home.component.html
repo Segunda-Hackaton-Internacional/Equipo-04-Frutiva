@@ -1,16 +1,31 @@
-
 <main class="home">
   <div class="container">
     <div class="home-content">
-      <h1 class="main-title">Frutiva</h1>
+      <div class="brand-section">
+        <h1 class="main-title">Native</h1>
+        <p class="brand-subtitle">desarrollado por <span class="brand-name">Frutiva</span></p>
+      </div>
+      
       <p class="subtitle">
         Descubre productos frescos de pequeños emprendedores y frutas exóticas directamente desde la naturaleza.
       </p>
+      
       <div class="cta-container">
-        <button class="cta-button" (click)="irBuscar()">
+        <button class="cta-button primary" (click)="irBuscar()">
+          <span class="button-icon">🌿</span>
           Explorar Productos
+        </button>
+        <button class="cta-button secondary" (click)="irRegistro()">
+          Únete Ahora
         </button>
       </div>
     </div>
+  </div>
+  
+  <!-- Elementos decorativos -->
+  <div class="decorative-elements">
+    <div class="floating-circle circle-1"></div>
+    <div class="floating-circle circle-2"></div>
+    <div class="floating-circle circle-3"></div>
   </div>
 </main>

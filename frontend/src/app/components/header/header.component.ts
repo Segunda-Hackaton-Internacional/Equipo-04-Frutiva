@@ -14,16 +14,22 @@ export class HeaderComponent implements OnInit {
 
   constructor(private router: Router) {}
 
-  ngOnInit() {
+ngOnInit() {
+  if (typeof window !== 'undefined' && window.localStorage) {
     this.isLoggedIn = !!localStorage.getItem('token');
   }
+}
+
 
   irHome()       { this.router.navigate(['/home']); }
   irExplorar()   { this.router.navigate(['/buscar']); }
-  irCarrito()   { this.router.navigate(['/carrito']); }
+  irCarrito()    { this.router.navigate(['/carrito']); }
   irPedidos()    { this.router.navigate(['/pedidos']); }
   irLogin()      { this.router.navigate(['/login']); }
   irRegister()   { this.router.navigate(['/registro']); }
+  irBlog()       { this.router.navigate(['/blog']); }
+  irRecetas()       { this.router.navigate(['/recetas']); }
+
   logout() {
     localStorage.removeItem('token');
     this.isLoggedIn = false;

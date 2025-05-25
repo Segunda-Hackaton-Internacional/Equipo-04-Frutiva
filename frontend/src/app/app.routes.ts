@@ -7,6 +7,8 @@ import { AuthGuard } from './auth.guard';
 import { DetallesProductoComponent } from './components/detalles-producto/detalles-producto.component';
 import { CarritoComponent } from './components/carrito/carrito.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
+import { BlogComponent } from './components/blog/blog.component';
+import { RecetasComponent } from './components/recetas/recetas.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -16,5 +18,7 @@ export const routes: Routes = [
     { path: 'buscar', component: BuscarComponent, canActivate: [AuthGuard] },
     { path: 'detalles-producto/:id', component: DetallesProductoComponent, canActivate: [AuthGuard] },
     { path: 'carrito', component: CarritoComponent, canActivate: [AuthGuard] },
-    { path: 'pedidos', component: PedidosComponent, canActivate: [AuthGuard] }
+    { path: 'pedidos', component: PedidosComponent, canActivate: [AuthGuard] },
+    { path: 'blog', component: BlogComponent, canActivate: [AuthGuard] },
+    { path: 'recetas', component: RecetasComponent, canActivate: [AuthGuard] }
 ];

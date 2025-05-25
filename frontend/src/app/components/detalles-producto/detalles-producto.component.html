@@ -1,35 +1,210 @@
-<div class="detalle-container" *ngIf="producto">
-    <div class="imagen">
-      <img src="/assets/foto_generica.png" alt="Imagen del producto">
-    </div>
-  
-    <div class="info">
-      <h2>{{ producto.nombre }}</h2>
-      <p><strong>SKU:</strong> {{ producto.sku }}</p>
-      <p><strong>Marca:</strong> {{ producto.marca }}</p>
-      <p><strong>Modelo:</strong> {{ producto.modelo }}</p>
-      <p><strong>Categoría:</strong> {{ producto.categoria }}</p>
-      <p><strong>Color:</strong> {{ producto.color }}</p>
-      <p><strong>Material:</strong> {{ producto.material }}</p>
-      <p><strong>Dimensiones (L×A×H):</strong> {{ producto.largo }} × {{ producto.ancho }} × {{ producto.alto }} cm</p>
-      <p><strong>Peso neto:</strong> {{ producto.pesoNeto }} kg</p>
-      <p><strong>Peso bruto:</strong> {{ producto.pesoBruto }} kg</p>
-      <p><strong>Stock disponible:</strong> {{ producto.stock }}</p>
-      <p><strong>Origen:</strong> {{ producto.origen }}</p>
-      <p><strong>Proveedor:</strong> {{ producto.proveedor }}</p>
-      <p><strong>Fecha de fabricación:</strong> {{ producto.fechaFabricacion | date }}</p>
-      <p><strong>Fecha de caducidad:</strong> {{ producto.fechaCaducidad | date }}</p>
-      <p><strong>Garantía (meses):</strong> {{ producto.garantia }}</p>
-      <p><strong>Precio unitario:</strong> {{ producto.precioUnitario | currency:'USD' }}</p>
-      <p><strong>Descuento:</strong> {{ producto.descuentoPorcentaje }}%</p>
-      <p><strong>Cantidad mínima:</strong> {{ producto.cantidadMinima }}</p>
-      <p><strong>Precio por mayor:</strong> {{ producto.precioPorMayor | currency:'USD' }}</p>
-      <p><strong>Unidades por paquete:</strong> {{ producto.unidadesPorPaquete }}</p>
-      <p><strong>Tipo de empaque:</strong> {{ producto.tipoEmpaque }}</p>
-      <p><strong>Número de lote:</strong> {{ producto.numeroLote }}</p>
-      <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
-  
-      <button class="agregar-button" (click)="agregarAlCarrito()">Agregar al carrito</button>
+<div class="producto-detalle-page" *ngIf="producto">
+  <!-- Hero Section - Producto Principal -->
+  <div class="hero-section">
+    <div class="producto-container">
+      <div class="imagen-principal">
+        <img src="/assets/foto_generica.png" alt="{{ producto.nombre }}">
+        <div class="badge-organico">
+          <span>🌿 ORGÁNICO</span>
+        </div>
+      </div>
+      
+      <div class="info-principal">
+        <h1 class="producto-titulo">{{ producto.nombre }}</h1>
+        <div class="precio-section">
+          <span class="precio-actual">{{ producto.precioUnitario | currency:'USD' }}</span>
+          <span class="descuento" *ngIf="tieneDescuento">
+            -{{ producto.descuentoPorcentaje }}%
+          </span>
+        </div>
+        
+        <div class="informacion-clave">
+          <div class="info-card">
+            <div class="info-icon">📦</div>
+            <div>
+              <strong>Stock Disponible</strong>
+              <p>{{ producto.stock }} unidades</p>
+            </div>
+          </div>
+          
+          <div class="info-card">
+            <div class="info-icon">🌍</div>
+            <div>
+              <strong>Origen</strong>
+              <p>{{ producto.origen }}</p>
+            </div>
+          </div>
+          
+          <div class="info-card">
+            <div class="info-icon">🛡️</div>
+            <div>
+              <strong>Garantía</strong>
+              <p>{{ producto.garantia }} meses</p>
+            </div>
+          </div>
+        </div>
+        
+        <button class="btn-agregar-carrito" (click)="agregarAlCarrito()">
+          <span>🛒</span>
+          Agregar al Carrito
+        </button>
+      </div>
     </div>
   </div>
-  
+
+  <!-- Especificaciones Técnicas -->
+  <div class="especificaciones-section">
+    <h2>Especificaciones del Producto</h2>
+    <div class="specs-grid">
+      <div class="spec-group">
+        <h3>Información Básica</h3>
+        <div class="spec-item"><strong>SKU:</strong> {{ producto.sku }}</div>
+        <div class="spec-item"><strong>Marca:</strong> {{ producto.marca }}</div>
+        <div class="spec-item"><strong>Modelo:</strong> {{ producto.modelo }}</div>
+        <div class="spec-item"><strong>Categoría:</strong> {{ producto.categoria }}</div>
+      </div>
+      
+      <div class="spec-group">
+        <h3>Características Físicas</h3>
+        <div class="spec-item"><strong>Color:</strong> {{ producto.color }}</div>
+        <div class="spec-item"><strong>Material:</strong> {{ producto.material }}</div>
+        <div class="spec-item"><strong>Dimensiones:</strong> {{ producto.largo }}×{{ producto.ancho }}×{{ producto.alto }} cm</div>
+        <div class="spec-item"><strong>Peso Neto:</strong> {{ producto.pesoNeto }} kg</div>
+      </div>
+      
+      <div class="spec-group">
+        <h3>Información Comercial</h3>
+        <div class="spec-item"><strong>Proveedor:</strong> {{ producto.proveedor }}</div>
+        <div class="spec-item"><strong>Cantidad Mínima:</strong> {{ producto.cantidadMinima }}</div>
+        <div class="spec-item"><strong>Precio por Mayor:</strong> {{ producto.precioPorMayor | currency:'USD' }}</div>
+        <div class="spec-item"><strong>Unidades por Paquete:</strong> {{ producto.unidadesPorPaquete }}</div>
+      </div>
+      
+      <div class="spec-group">
+        <h3>Fechas y Lote</h3>
+        <div class="spec-item"><strong>Fabricación:</strong> {{ producto.fechaFabricacion | date }}</div>
+        <div class="spec-item"><strong>Caducidad:</strong> {{ producto.fechaCaducidad | date }}</div>
+        <div class="spec-item"><strong>Número de Lote:</strong> {{ producto.numeroLote }}</div>
+        <div class="spec-item"><strong>Tipo de Empaque:</strong> {{ producto.tipoEmpaque }}</div>
+      </div>
+    </div>
+    
+    <div class="descripcion-completa">
+      <h3>Descripción del Producto</h3>
+      <p>{{ producto.descripcion }}</p>
+    </div>
+  </div>
+
+  <!-- Historia de la Uchuva -->
+  <div class="historia-section">
+    <div class="historia-header">
+      <h2>{{ historiaUchuva.titulo }}</h2>
+      <div class="decorative-line"></div>
+    </div>
+    
+    <div class="historia-content">
+      <div class="historia-imagen">
+        <div class="uchuva-placeholder">
+          <img src="assets/uchuva-fruta.jpg" alt="Uchuva" class="imagen-uchuva">
+
+        </div>
+      </div>
+      
+      <div class="historia-texto">
+        <p *ngFor="let parrafo of historiaUchuva.parrafos" class="parrafo-historia">
+          {{ parrafo }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Certificado Orgánico -->
+  <div class="certificado-section">
+    <div class="certificado-card">
+      <div class="certificado-icon">
+        <span>🏆</span>
+      </div>
+      <div class="certificado-info">
+        <h3>Certificación Orgánica</h3>
+        <p>Nuestros productos cuentan con certificación orgánica internacional que garantiza procesos libres de químicos y pesticidas.</p>
+      </div>
+      <button class="btn-descargar" (click)="descargarCertificado()">
+        <span>📄</span>
+        Descargar Certificado
+      </button>
+    </div>
+  </div>
+
+  <!-- Sección de Comentarios -->
+  <div class="comentarios-section">
+    <h2>Comentarios y Reseñas</h2>
+    
+    <!-- Formulario para nuevo comentario -->
+    <div class="nuevo-comentario">
+      <h3>Deja tu comentario</h3>
+      <form (ngSubmit)="agregarComentario()" #comentarioForm="ngForm">
+        <div class="form-group">
+          <input 
+            type="text" 
+            [(ngModel)]="nuevoComentario.autor" 
+            name="autor"
+            placeholder="Tu nombre"
+            required
+            class="input-nombre">
+        </div>
+        
+        <div class="form-group">
+          <label>Calificación:</label>
+          <select [(ngModel)]="nuevoComentario.calificacion" name="calificacion" class="select-calificacion">
+            <option value="5">★★★★★ (5 estrellas)</option>
+            <option value="4">★★★★☆ (4 estrellas)</option>
+            <option value="3">★★★☆☆ (3 estrellas)</option>
+            <option value="2">★★☆☆☆ (2 estrellas)</option>
+            <option value="1">★☆☆☆☆ (1 estrella)</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <textarea 
+            [(ngModel)]="nuevoComentario.texto" 
+            name="texto"
+            placeholder="Escribe tu comentario aquí..."
+            required
+            rows="4"
+            class="textarea-comentario"></textarea>
+        </div>
+        
+        <button type="submit" class="btn-enviar-comentario" [disabled]="!comentarioForm.form.valid">
+          Publicar Comentario
+        </button>
+      </form>
+    </div>
+    
+    <!-- Lista de comentarios existentes -->
+    <div class="comentarios-lista">
+      <div *ngFor="let comentario of comentarios" class="comentario-item">
+        <div class="comentario-avatar">
+          {{ comentario.avatar }}
+        </div>
+        <div class="comentario-content">
+          <div class="comentario-header">
+            <h4>{{ comentario.autor }}</h4>
+            <div class="comentario-fecha">{{ comentario.fecha | date:'short' }}</div>
+          </div>
+          <div class="comentario-estrellas">
+            <span *ngFor="let estrella of getEstrellas(comentario.calificacion)" 
+                  [class.estrella-llena]="estrella === '★'"
+                  [class.estrella-vacia]="estrella === '☆'">
+              {{ estrella }}
+            </span>
+          </div>
+          <p class="comentario-texto">{{ comentario.texto }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="mensaje" class="mensaje-error">
+  {{ mensaje }}
+</div>

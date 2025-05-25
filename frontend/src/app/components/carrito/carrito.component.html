@@ -1,32 +1,112 @@
-<div class="carrito-container" *ngIf="productos.length > 0; else vacio">
-    <div class="card" *ngFor="let producto of productos; let i = index">
-      <div class="card-info">
-        <div class="texto">
-          <h3>{{ producto.nombre }}</h3>
-          <p><strong>Marca:</strong> {{ producto.marca }}</p>
-          <p><strong>Precio unitario:</strong> {{ producto.precioUnitario | currency:'USD' }}</p>
-          <p><strong>Cantidad:</strong> {{ producto.cantidad }}</p>
-          <p><strong>Total por producto:</strong> {{ producto.precioUnitario * producto.cantidad | currency:'USD' }}</p>
-  
-          <div class="cantidad-controls">
-            <button (click)="disminuirCantidad(i)">-</button>
-            <button (click)="aumentarCantidad(i)">+</button>
-          </div>
+<div class="carrito-wrapper">
+  <div class="carrito-header">
+    <h1 class="carrito-title">
+      <span class="shopping-icon">🛒</span>
+      Mi Carrito de Compras
+    </h1>
+    <div class="header-controls">
+      <div class="items-count">{{productos.length}} productos</div>
+      
+      <!-- Selector de Moneda -->
+      <div class="currency-selector">
+        <label class="currency-label">💰 Moneda:</label>
+        <select class="currency-dropdown" 
+                [(ngModel)]="monedaSeleccionada" 
+                (ngModelChange)="cambiarMoneda($event)">
+          <option *ngFor="let moneda of monedas" [ngValue]="moneda">
+            {{moneda.bandera}} {{moneda.codigo}} - {{moneda.nombre}}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="carrito-container" *ngIf="productos.length > 0; else vacio">
+    <div class="productos-lista">
+      <div class="producto-card" *ngFor="let producto of productos; let i = index">
+        <div class="producto-imagen">
+          <img [src]="producto.imagen" [alt]="producto.nombre" />
+          <div class="imagen-overlay"></div>
         </div>
-        <div class="imagen">
-          <img src="/assets/mermeladas-caseras.png" alt="Imagen del producto">
+        
+        <div class="producto-info">
+          <div class="producto-header">
+            <h3 class="producto-nombre">{{ producto.nombre }}</h3>
+            <button class="eliminar-btn" (click)="eliminarProducto(i)" title="Eliminar producto">
+              ✕
+            </button>
+          </div>
+          
+          <div class="producto-marca">{{ producto.marca }}</div>
+          <p class="producto-descripcion">{{ producto.descripcion }}</p>
+          
+          <div class="producto-precios">
+            <div class="precio-unitario">
+              <span class="precio-label">Precio unitario</span>
+              <span class="precio-valor">
+                {{ obtenerSimboloMoneda() }}{{ formatearPrecio(producto.precioUnitario) }}
+              </span>
+            </div>
+            <div class="precio-total">
+              <span class="precio-label">Subtotal</span>
+              <span class="precio-valor precio-destacado">
+                {{ obtenerSimboloMoneda() }}{{ formatearPrecio(producto.precioUnitario * producto.cantidad) }}
+              </span>
+            </div>
+          </div>
+
+          <div class="cantidad-section">
+            <span class="cantidad-label">Cantidad</span>
+            <div class="cantidad-controls">
+              <button class="cantidad-btn" (click)="disminuirCantidad(i)" title="Disminuir cantidad">−</button>
+              <span class="cantidad-display">{{ producto.cantidad }}</span>
+              <button class="cantidad-btn" (click)="aumentarCantidad(i)" title="Aumentar cantidad">+</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  
-    <div class="total-compra">
-      <p><strong>Total de la compra:</strong> {{ obtenerTotal() | currency:'USD' }}</p>
+
+    <div class="resumen-compra">
+      <div class="resumen-header">
+        <h3>💳 Resumen del Pedido</h3>
+        <div class="currency-display">
+          <span class="currency-flag">{{ monedaSeleccionada.bandera }}</span>
+          <span class="currency-name">{{ monedaSeleccionada.nombre }}</span>
+        </div>
+      </div>
+      <div class="resumen-detalle">
+        <div class="resumen-linea">
+          <span>Subtotal ({{productos.length}} productos):</span>
+          <span>{{ obtenerSimboloMoneda() }}{{ formatearPrecio(obtenerTotal()) }}</span>
+        </div>
+        <div class="resumen-linea">
+          <span>Envío:</span>
+          <span class="envio-gratis">✅ Gratis</span>
+        </div>
+        <div class="resumen-linea">
+          <span>Descuentos aplicados:</span>
+          <span style="color: var(--success);">{{ obtenerSimboloMoneda() }}0{{ monedaSeleccionada.codigo === 'JPY' || monedaSeleccionada.codigo === 'COP' || monedaSeleccionada.codigo === 'CRC' ? '' : '.00' }}</span>
+        </div>
+        <div class="resumen-linea total-final">
+          <span>💰 Total a Pagar:</span>
+          <span>{{ obtenerSimboloMoneda() }}{{ formatearPrecio(obtenerTotal()) }} {{ monedaSeleccionada.codigo }}</span>
+        </div>
+      </div>
+      
+      <button class="comprar-button" (click)="procederAlPago()">
+        <span class="button-icon">🛍️</span>
+        Proceder al Pago
+      </button>
     </div>
-  
-    <button class="comprar-button">Comprar</button>
   </div>
-  
+
   <ng-template #vacio>
-    <p class="vacio">El carrito está vacío.</p>
+    <div class="carrito-vacio">
+      <div class="vacio-icon">🛒</div>
+      <h2>Tu carrito está vacío</h2>
+      <p>¡Descubre nuestras deliciosas mermeladas artesanales y comienza a llenar tu carrito con sabores únicos!</p>
+      <button class="continuar-comprando" (click)="continuarComprando()">🍯 Continuar Comprando</button>
+    </div>
   </ng-template>
-  
+</div>

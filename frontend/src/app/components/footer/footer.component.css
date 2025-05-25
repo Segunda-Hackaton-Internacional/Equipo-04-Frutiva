@@ -1,68 +1,53 @@
-/* Elimina el margen y padding del body para evitar scroll horizontal */
-body {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* Asegura que el body ocupe toda la altura */
-    overflow-x: hidden; /* Evita el scroll horizontal */
-  }
-  
-  /* Asegura que el contenedor principal (content) ocupe todo el espacio */
-  .main-content {
-    flex-grow: 1;
+/* Footer que aparece al final del contenido, no fijo */
+.footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
     width: 100%;
-  }
-  
-  /* Footer pegado al fondo */
-  .footer {
-    background-color: #333; /* Color de fondo */
-    color: white; /* Color del texto */
-    text-align: center; /* Alineación del texto */
-    padding: 20px 0; /* Espaciado superior e inferior */
-    width: 100%; /* Asegura que ocupe todo el ancho */
-  }
-  
-  /* Ajustes de contenedor */
-  .container {
+    box-sizing: border-box;
+}
+
+/* Asegura que no haya overflow horizontal */
+.container {
     width: 100%;
-    max-width: 1500px; /* Igual que en el home */
-    margin: 0 auto; /* Centrar el contenido */
-    padding: 0 20px; /* Espaciado lateral */
-  }
-  
-  .logo img {
-    width: 100px; /* Ajusta el tamaño del logo */
-    margin-bottom: 10px; /* Espacio debajo del logo */
-  }
-  
-  .contact-info {
-    font-size: 1rem; /* Tamaño de fuente */
-    color: #ddd; /* Color del texto */
-  }
-  
-  /* Ajustes responsive */
-  @media (max-width: 768px) {
+    max-width: 1200px; /* Reducido para evitar problemas de ancho */
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.logo img {
+    width: 100px;
+    margin-bottom: 10px;
+}
+
+.contact-info {
+    font-size: 1rem;
+    color: #ddd;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
     .logo img {
-      width: 80px; /* Tamaño reducido para móviles */
+        width: 80px;
     }
-  
+    
     .contact-info {
-      font-size: 0.9rem; /* Tamaño de fuente reducido */
+        font-size: 0.9rem;
     }
-  }
-  
-  @media (max-width: 480px) {
+}
+
+@media (max-width: 480px) {
     .footer {
-      padding: 15px 0; /* Espaciado reducido para pantallas pequeñas */
+        padding: 15px 0;
     }
-  
+    
     .logo img {
-      width: 70px; /* Tamaño aún más reducido para pantallas pequeñas */
+        width: 70px;
     }
-  
+    
     .contact-info {
-      font-size: 0.8rem; /* Tamaño de fuente aún más reducido */
+        font-size: 0.8rem;
     }
-  }
-  
+}

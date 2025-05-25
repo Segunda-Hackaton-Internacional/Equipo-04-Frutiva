@@ -1,57 +1,188 @@
-<!-- buscar.component.html -->
 <div class="buscar-container">
   <!-- Columna izquierda: filtros -->
   <aside class="filters">
+    <div class="filters-header">
+      <svg class="filter-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+      </svg>
+      <h2>Filtros</h2>
+    </div>
+
     <form [formGroup]="form">
-      <details>
-        <summary>SKU</summary>
-        <input type="text" formControlName="sku" placeholder="Filtrar por SKU">
-      </details>
-
-      <details>
-        <summary>Nombre</summary>
-        <input type="text" formControlName="nombre" placeholder="Filtrar por nombre">
-      </details>
-
-      <details>
-        <summary>Marca</summary>
-        <input type="text" formControlName="marca" placeholder="Filtrar por marca">
-      </details>
-
-      <details>
-        <summary>Categoría</summary>
-        <input type="text" formControlName="categoria" placeholder="Filtrar por categoría">
-      </details>
-
-      <details>
-        <summary>Precio unitario</summary>
-        <div class="range-inputs">
-          <input type="number"
-                 formControlName="precioMinimo"
-                 placeholder="Mínimo">
-          <input type="number"
-                 formControlName="precioMaximo"
-                 placeholder="Máximo">
+      <div class="filter-group">
+        <button type="button" 
+                class="filter-toggle" 
+                [class.active]="filterStates['sku']"
+                (click)="toggleFilter('sku')">
+          SKU
+          <svg class="chevron" [class.rotated]="filterStates['sku']" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div class="filter-content" [class.open]="filterStates['sku']">
+          <div class="input-group">
+            <input type="text" formControlName="sku" placeholder="Buscar por SKU...">
+          </div>
         </div>
-      </details>
+      </div>
+
+      <div class="filter-group">
+        <button type="button" 
+                class="filter-toggle" 
+                [class.active]="filterStates['nombre']"
+                (click)="toggleFilter('nombre')">
+          Nombre
+          <svg class="chevron" [class.rotated]="filterStates['nombre']" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div class="filter-content" [class.open]="filterStates['nombre']">
+          <div class="input-group">
+            <input type="text" formControlName="nombre" placeholder="Buscar por nombre...">
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <button type="button" 
+                class="filter-toggle" 
+                [class.active]="filterStates['marca']"
+                (click)="toggleFilter('marca')">
+          Marca
+          <svg class="chevron" [class.rotated]="filterStates['marca']" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div class="filter-content" [class.open]="filterStates['marca']">
+          <div class="input-group">
+            <input type="text" formControlName="marca" placeholder="Buscar por marca...">
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <button type="button" 
+                class="filter-toggle" 
+                [class.active]="filterStates['categoria']"
+                (click)="toggleFilter('categoria')">
+          Categoría
+          <svg class="chevron" [class.rotated]="filterStates['categoria']" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div class="filter-content" [class.open]="filterStates['categoria']">
+          <div class="input-group">
+            <input type="text" formControlName="categoria" placeholder="Buscar por categoría...">
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <button type="button" 
+                class="filter-toggle" 
+                [class.active]="filterStates['precio']"
+                (click)="toggleFilter('precio')">
+          Precio
+          <svg class="chevron" [class.rotated]="filterStates['precio']" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div class="filter-content" [class.open]="filterStates['precio']">
+          <div class="range-inputs">
+            <input type="number" formControlName="precioMinimo" placeholder="Mínimo">
+          </div>
+          <div class="range-inputs">
+            <input type="number" formControlName="precioMaximo" placeholder="Máximo">
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="clear-filters" (click)="clearFilters()">
+        Limpiar Filtros
+      </button>
     </form>
   </aside>
 
   <!-- Columna derecha: productos -->
   <section class="products">
-    <div *ngFor="let p of productos" class="product-card">
-      <img src="assets/foto_generica.png" alt="Foto genérica" class="product-image">
-      <div class="product-info">
-        <h3>{{ p.nombre }}</h3>
-        <p class="precio">Precio: {{ p.precioUnitario | currency:'USD':'symbol':'1.2-2' }}</p>
-        <div class="buy-container">
-          <button type="button" class="buy-button" [routerLink]="['/detalles-producto', p.id]">Comprar</button>
+    <div class="products-header">
+      <div class="products-count">
+        Mostrando <strong>{{ getProductCount() }}</strong> productos
+      </div>
+      <div class="view-toggle">
+        <button class="view-btn" 
+                [class.active]="viewMode === 'grid'" 
+                (click)="toggleView('grid')">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8 0A1.5 1.5 0 0 1 10.5 9h3A1.5 1.5 0 0 1 15 10.5v3A1.5 1.5 0 0 1 13.5 15h-3A1.5 1.5 0 0 1 9 13.5v-3z"/>
+          </svg>
+        </button>
+        <button class="view-btn" 
+                [class.active]="viewMode === 'list'" 
+                (click)="toggleView('list')">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading spinner -->
+    <div *ngIf="isLoading" class="loading">
+      <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Productos -->
+    <div *ngIf="!isLoading && productos.length > 0" 
+         class="products-container"
+         [ngClass]="viewMode === 'list' ? 'products-list' : 'products-grid'">
+      
+      <div *ngFor="let p of productos" 
+           class="product-card"
+           [class.list-view]="viewMode === 'list'">
+        
+        <div class="product-image-container">
+          <img src="assets/foto_generica.png" 
+               [alt]="p.nombre" 
+               class="product-image">
+        </div>
+        
+        <div class="product-info">
+          <div class="product-details">
+            <h3 class="product-title">{{ p.nombre }}</h3>
+            <div class="product-meta" *ngIf="viewMode === 'grid'">
+              <span *ngIf="p.sku">SKU: {{ p.sku }}</span>
+              <span *ngIf="p.marca">{{ p.marca }}</span>
+              <span *ngIf="p.categoria">{{ p.categoria }}</span>
+            </div>
+            <div class="product-price">
+              {{ p.precioUnitario | currency:'USD':'symbol':'1.2-2' }}
+            </div>
+          </div>
+          <div class="product-actions">
+            <a [routerLink]="['/detalles-producto', p.id]" class="buy-button">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+              </svg>
+              Comprar
+            </a>
+            <button class="wishlist-btn" type="button">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
-    
-    <div *ngIf="productos.length === 0" class="no-results">
-      No se encontraron productos con esos filtros.
-    </div>    
+
+    <!-- Estado de no resultados -->
+    <div *ngIf="!isLoading && productos.length === 0" class="no-results">
+      <svg class="no-results-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+      <h3>No se encontraron productos</h3>
+      <p>Intenta ajustar tus filtros o realiza una búsqueda diferente.</p>
+    </div>
   </section>
 </div>

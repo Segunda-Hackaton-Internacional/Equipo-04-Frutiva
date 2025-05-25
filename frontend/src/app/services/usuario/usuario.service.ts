@@ -1,17 +1,20 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import axios from 'axios';
 import { Usuario } from '../../models/Usuario';
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class UsuarioService {
-
   private apiUrl = 'http://localhost:8080/api';
+  private isBrowser: boolean;
 
-
-  constructor() {}
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
 
   crearUsuario(usuario: Usuario): Promise<Usuario> {
     return axios.post<Usuario>(`${this.apiUrl}/auth/register`, usuario)
@@ -22,8 +25,8 @@ export class UsuarioService {
     return axios.post<{ token: string }>(`${this.apiUrl}/auth/login`, { correo, contrasenia })
       .then(response => {
         const token = response.data.token;
-        if (token) {
-          localStorage.setItem('token', token); 
+        if (token && this.isBrowser) {
+          localStorage.setItem('token', token);
         }
         return token;
       })
@@ -31,39 +34,41 @@ export class UsuarioService {
   }
 
   getUsuarioActual(): Promise<Usuario | null> {
-    const token = localStorage.getItem('token'); 
+    if (!this.isBrowser) {
+      return Promise.resolve(null);
+    }
+    const token = localStorage.getItem('token');
     if (token) {
       return axios.get<Usuario>(`${this.apiUrl}/usuarios/usuarioActual`, {
-        headers: {
-          'Authorization': `Bearer ${token}` 
-        }
+        headers: { Authorization: `Bearer ${token}` }
       })
-        .then(response => response.data) 
+        .then(response => response.data)
         .catch(() => null);
     }
     return Promise.resolve(null);
   }
-  
 
   updateUsuario(usuario: Usuario): Promise<Usuario> {
-    const token = localStorage.getItem('token'); 
-    if (!token) {
-      return Promise.reject('No hay token disponible'); 
+    if (!this.isBrowser) {
+      return Promise.reject('No hay entorno de navegador');
     }
-  
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return Promise.reject('No hay token disponible');
+    }
     return axios.put<Usuario>(`${this.apiUrl}/usuarios/id`, usuario, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
+      headers: { Authorization: `Bearer ${token}` }
     })
-      .then(response => response.data) 
+      .then(response => response.data)
       .catch(error => {
-        console.error('Error actualizando el usuario:', error); 
-        throw error; 
+        console.error('Error actualizando el usuario:', error);
+        throw error;
       });
   }
-  
+
   logout() {
-    localStorage.removeItem('token');
+    if (this.isBrowser) {
+      localStorage.removeItem('token');
+    }
   }
 }

@@ -1,0 +1,248 @@
+<div class="blog-container">
+  <!-- Header Section -->
+  <header class="blog-header">
+    <div class="header-content">
+      <div class="header-badge">
+        <span class="badge-text">Blog Frutiva</span>
+        <div class="badge-glow"></div>
+      </div>
+      <h1 class="main-title">
+        <span class="title-highlight">Sostenibilidad</span> 
+        <span class="title-connector">&</span>
+        <span class="title-highlight">Sabor</span>
+      </h1>
+      <p class="subtitle">Historias que nutren el alma y transforman comunidades</p>
+      <div class="header-decoration">
+        <div class="floating-fruits">
+          <div class="fruit-float fruit-1">🥭</div>
+          <div class="fruit-float fruit-2">🌱</div>
+          <div class="fruit-float fruit-3">🍯</div>
+        </div>
+      </div>
+    </div>
+    <div class="header-wave">
+      <svg viewBox="0 0 1200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,60 C300,120 900,0 1200,60 L1200,120 L0,120 Z" fill="var(--background-light)"/>
+      </svg>
+    </div>
+  </header>
+
+  <!-- Vista de Artículo Individual -->
+  <div *ngIf="selectedPost" class="post-detail">
+    <div class="detail-container">
+      <button class="back-button" (click)="goBack()">
+        <div class="back-icon">←</div>
+        <span>Volver al blog</span>
+      </button>
+      
+      <article class="full-post">
+        <div class="post-hero">
+          <div class="post-image-container">
+            <img [src]="'assets/' + selectedPost.image" 
+                 [alt]="selectedPost.title"
+                 class="post-hero-image"
+                 loading="lazy">
+            <div class="image-gradient-overlay"></div>
+          </div>
+          <div class="post-meta-hero">
+            <div class="category-badge" [style.background-color]="selectedPost.color">
+              <span class="category-icon">{{ getCategoryData(selectedPost.category).icon }}</span>
+              {{ selectedPost.category }}
+            </div>
+            <h1 class="post-title">{{ selectedPost.title }}</h1>
+            <div class="post-info-hero">
+              <div class="info-item">
+                <span class="info-icon">👤</span>
+                <span>{{ selectedPost.author }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-icon">📅</span>
+                <span>{{ selectedPost.date }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-icon">⏱️</span>
+                <span>{{ selectedPost.readTime }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="post-content">
+          <div class="content-wrapper">
+            <div class="content-text" [innerHTML]="formatContent(selectedPost.content)"></div>
+            
+            <div class="post-actions">
+              <div class="action-buttons">
+                <button class="action-btn share-btn">
+                  <span class="btn-icon">📤</span>
+                  Compartir
+                </button>
+                <button class="action-btn like-btn">
+                  <span class="btn-icon">❤️</span>
+                  Me gusta
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <!-- Vista Principal del Blog -->
+  <div *ngIf="!selectedPost" class="blog-main">
+    <!-- Filtros de Categoría -->
+    <nav class="category-nav">
+      <div class="nav-container">
+        <h2 class="nav-title">Explora nuestras historias</h2>
+        <div class="category-buttons">
+          <button 
+            *ngFor="let category of categories"
+            [class.active]="selectedCategory === category.name"
+            (click)="selectCategory(category.name)"
+            class="category-btn"
+            [style.--category-color]="category.color">
+            <span class="category-icon">{{ category.icon }}</span>
+            <span class="category-text">{{ category.name }}</span>
+            <div class="category-glow"></div>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Grid de Artículos -->
+    <section class="posts-grid">
+      <div class="grid-container">
+        <article 
+          *ngFor="let post of filteredPosts; let i = index"
+          class="post-card"
+          [class]="'card-' + (i % 3)"
+          (click)="selectPost(post)">
+          
+          <div class="card-image-container">
+            <img [src]="'assets/' + post.image" 
+                 [alt]="post.title"
+                 class="card-image"
+                 loading="lazy">
+            <div class="image-overlay">
+              <div class="overlay-content">
+                <span class="read-more-text">Leer artículo</span>
+                <div class="read-arrow">→</div>
+              </div>
+            </div>
+            <div class="image-decoration" [style.background-color]="post.color"></div>
+          </div>
+          
+          <div class="card-content">
+            <div class="card-header">
+              <div class="category-badge" [style.background-color]="post.color">
+                <span class="category-icon">{{ getCategoryData(post.category).icon }}</span>
+                {{ post.category }}
+              </div>
+              <div class="read-time">
+                <span class="time-icon">⏱️</span>
+                {{ post.readTime }}
+              </div>
+            </div>
+            
+            <h3 class="card-title">{{ post.title }}</h3>
+            <p class="card-excerpt">{{ post.excerpt }}</p>
+            
+            <div class="card-footer">
+              <div class="author-info">
+                <div class="author-avatar" [style.background-color]="post.color">
+                  {{ post.author.charAt(0) }}
+                </div>
+                <div class="author-details">
+                  <span class="author-name">{{ post.author }}</span>
+                  <span class="publish-date">{{ post.date }}</span>
+                </div>
+              </div>
+              <div class="card-actions">
+                <button class="quick-action" [style.color]="post.color">
+                  <span>❤️</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter-section">
+      <div class="newsletter-container">
+        <div class="newsletter-content">
+          <div class="newsletter-icon">📧</div>
+          <h3>¡No te pierdas nuestras historias!</h3>
+          <p>Recibe semanalmente contenido exclusivo sobre sostenibilidad y nuestras comunidades productoras</p>
+          <div class="newsletter-form">
+            <input type="email" placeholder="Tu correo electrónico" class="email-input">
+            <button class="subscribe-btn">Suscribirme</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección de Impacto -->
+    <section class="impact-section">
+      <div class="impact-container">
+        <div class="impact-header">
+          <h2>Nuestro Impacto en Números</h2>
+          <p>Cada compra genera un efecto multiplicador en nuestras comunidades</p>
+        </div>
+        <div class="impact-stats">
+          <div class="stat-item stat-primary">
+            <div class="stat-icon">👨‍👩‍👧‍👦</div>
+            <div class="stat-number">150+</div>
+            <div class="stat-label">Familias Productoras</div>
+            <div class="stat-description">Apoyadas directamente</div>
+          </div>
+          <div class="stat-item stat-secondary">
+            <div class="stat-icon">🍯</div>
+            <div class="stat-number">6</div>
+            <div class="stat-label">Variedades Nativas</div>
+            <div class="stat-description">Conservadas y cultivadas</div>
+          </div>
+          <div class="stat-item stat-accent">
+            <div class="stat-icon">🌱</div>
+            <div class="stat-number">85%</div>
+            <div class="stat-label">Origen Local</div>
+            <div class="stat-description">De nuestros ingredientes</div>
+          </div>
+          <div class="stat-item stat-success">
+            <div class="stat-icon">🚫</div>
+            <div class="stat-number">0</div>
+            <div class="stat-label">Conservantes</div>
+            <div class="stat-description">100% natural</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta-section">
+      <div class="cta-container">
+        <div class="cta-content">
+          <div class="cta-badge">
+            <span>🌟 Únete al cambio</span>
+          </div>
+          <h3>Transforma vidas con cada compra</h3>
+          <p>Descubre nuestros productos y forma parte del movimiento que está revolucionando la agricultura sostenible en Colombia</p>
+          <div class="cta-buttons">
+            <button class="cta-button primary">Ver Productos</button>
+            <button class="cta-button secondary">Conoce más</button>
+          </div>
+        </div>
+        <div class="cta-visual">
+          <div class="floating-elements">
+            <div class="element element-1">🥭</div>
+            <div class="element element-2">🌱</div>
+            <div class="element element-3">🍯</div>
+            <div class="element element-4">💚</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

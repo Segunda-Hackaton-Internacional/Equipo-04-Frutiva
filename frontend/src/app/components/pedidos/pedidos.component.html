@@ -1,27 +1,124 @@
-<div class="pedidos-container" *ngIf="pedidos.length > 0; else sinPedidos">
-    <div class="pedido-card" *ngFor="let pedido of pedidos">
-      <div class="pedido-header">
-        <h3>Pedido #{{ pedido.id }}</h3>
-        <span class="estado">{{ pedido.estado }}</span>
-      </div>
-  
-      <div class="productos">
-        <div class="producto" *ngFor="let producto of pedido.productos">
-          <p><strong>{{ producto.nombre }}</strong></p>
-          <p>Cantidad: {{ producto.cantidad }}</p>
-          <p>Subtotal: {{ producto.cantidad * producto.precioUnitario | currency:'USD' }}</p>
+<div class="pedidos-wrapper">
+  <!-- Header con título y estadísticas -->
+  <div class="header-section">
+    <div class="titulo-container">
+      <h1 class="titulo-principal">
+        <span class="icono-pedidos">📦</span>
+        Gestión de Pedidos
+      </h1>
+      <div class="estadisticas">
+        <div class="stat-card">
+          <span class="stat-numero">{{ pedidosFiltrados.length }}</span>
+          <span class="stat-label">Pedidos</span>
+        </div>
+        <div class="stat-card total-revenue">
+          <span class="stat-numero">${{ obtenerTotalGeneral().toFixed(2) }}</span>
+          <span class="stat-label">Total</span>
         </div>
       </div>
-  
-      <div class="total">
-        <p><strong>Total del pedido:</strong> {{ obtenerTotalPedido(pedido) | currency:'USD' }}</p>
-      </div>
-  
-      <button class="cancelar-button" (click)="cancelarPedido(pedido.id)">Cancelar pedido</button>
     </div>
   </div>
-  
+
+  <!-- Filtros -->
+  <div class="filtros-container">
+    <h3 class="filtros-titulo">Filtrar por estado:</h3>
+    <div class="filtros-botones">
+      <button 
+        *ngFor="let estado of estadosDisponibles"
+        class="filtro-btn"
+        [class.activo]="filtroEstado === estado"
+        (click)="cambiarFiltro(estado)">
+        {{ estado }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Lista de pedidos -->
+  <div class="pedidos-container" *ngIf="pedidosFiltrados.length > 0; else sinPedidos">
+    <div class="pedido-card" *ngFor="let pedido of pedidosFiltrados">
+      <!-- Header del pedido -->
+      <div class="pedido-header">
+        <div class="pedido-info">
+          <h3 class="pedido-numero">Pedido #{{ pedido.id }}</h3>
+          <div class="cliente-info">
+            <p class="cliente-nombre">👤 {{ pedido.cliente }}</p>
+            <p class="cliente-direccion">📍 {{ pedido.direccion }}</p>
+          </div>
+        </div>
+        <div class="estado-container">
+          <span class="estado" [class]="obtenerClaseEstado(pedido.estado)">
+            {{ pedido.estado }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Fechas -->
+      <div class="fechas-container">
+        <div class="fecha-item">
+          <span class="fecha-label">📅 Pedido:</span>
+          <span class="fecha-valor">{{ formatearFecha(pedido.fechaPedido) }}</span>
+        </div>
+        <div class="fecha-item" *ngIf="pedido.fechaEntrega">
+          <span class="fecha-label">🚚 Entrega:</span>
+          <span class="fecha-valor">{{ formatearFecha(pedido.fechaEntrega) }}</span>
+        </div>
+      </div>
+
+      <!-- Productos -->
+      <div class="productos-section">
+        <h4 class="productos-titulo">Productos:</h4>
+        <div class="productos-grid">
+          <div class="producto-card" *ngFor="let producto of pedido.productos">
+            <div class="producto-imagen">{{ producto.imagen }}</div>
+            <div class="producto-info">
+              <p class="producto-nombre">{{ producto.nombre }}</p>
+              <div class="producto-detalles">
+                <span class="cantidad">Cant: {{ producto.cantidad }}</span>
+                <span class="precio-unitario">${{ producto.precioUnitario.toFixed(2) }} c/u</span>
+                <span class="subtotal">${{ (producto.cantidad * producto.precioUnitario).toFixed(2) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total -->
+      <div class="total-section">
+        <div class="total-container">
+          <span class="total-label">Total del pedido:</span>
+          <span class="total-valor">${{ obtenerTotalPedido(pedido).toFixed(2) }}</span>
+        </div>
+      </div>
+
+      <!-- Acciones -->
+      <div class="acciones-container">
+        <button 
+          *ngIf="pedido.estado !== 'Entregado' && pedido.estado !== 'Cancelado'"
+          class="btn btn-cancelar" 
+          (click)="cancelarPedido(pedido.id)">
+          ❌ Cancelar
+        </button>
+        <button 
+          *ngIf="pedido.estado === 'Cancelado'"
+          class="btn btn-reactivar" 
+          (click)="reactivarPedido(pedido.id)">
+          🔄 Reactivar
+        </button>
+        <button 
+          class="btn btn-eliminar" 
+          (click)="eliminarPedido(pedido.id)">
+          🗑️ Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje cuando no hay pedidos -->
   <ng-template #sinPedidos>
-    <p class="mensaje-vacio">No hay pedidos realizados aún.</p>
+    <div class="mensaje-vacio">
+      <div class="vacio-icono">📝</div>
+      <h3>No hay pedidos para mostrar</h3>
+      <p>{{ filtroEstado === 'Todos' ? 'No tienes pedidos registrados aún.' : 'No hay pedidos con el estado "' + filtroEstado + '".' }}</p>
+    </div>
   </ng-template>
-  
+</div>

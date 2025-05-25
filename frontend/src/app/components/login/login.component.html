@@ -1,54 +1,109 @@
 <div class="login-page">
-    <!-- Contenedor Izquierdo: Imagen -->
+    <!-- Contenedor Izquierdo: Bienvenida -->
     <div class="login-image">
-      <h1>Bienvenido a <span>Frutiva</span></h1>
-      <p>Compra y vende tus productos de forma rápida y sencilla.</p>
+      <div class="welcome-content">
+        <div class="brand-logo">
+          <i class="fas fa-gem"></i>
+        </div>
+        
+        <h1>Bienvenido a <span>Native</span></h1>
+        <p class="tagline">Descubre una experiencia única y conecta con lo que realmente importa.</p>
+        
+        <div class="features-grid">
+          <div class="feature-item">
+            <i class="fas fa-rocket"></i>
+            <span>Rápido</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-shield-alt"></i>
+            <span>Seguro</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-heart"></i>
+            <span>Confiable</span>
+          </div>
+        </div>
+      </div>
     </div>
   
     <!-- Contenedor Derecho: Formulario -->
     <div class="login-form-container">
-      <form [formGroup]="loginForm" (ngSubmit)="iniciarSesion()" class="login-form">
-        <h2>Iniciar Sesión</h2>
-  
-        <!-- Campo de Correo -->
-        <div class="form-group">
-          <label for="correo"><i class="fas fa-envelope"></i> Correo</label>
-          <input id="correo" formControlName="correo" placeholder="Ingresa tu correo">
-          <div *ngIf="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched" class="error">
-            <div *ngIf="loginForm.get('correo')?.errors?.['required']">El correo es obligatorio.</div>
-            <div *ngIf="loginForm.get('correo')?.errors?.['email']">Ingresa un correo válido.</div>
+      <div class="form-wrapper">
+        <div class="form-header">
+          <div class="logo-circle">
+            <i class="fas fa-user"></i>
           </div>
+          <h2>Iniciar Sesión</h2>
+          <p>Ingresa tus credenciales para continuar</p>
         </div>
-  
-        <!-- Campo de Contraseña -->
-        <div class="form-group">
-          <label for="contrasenia"><i class="fas fa-lock"></i> Contraseña</label>
-          <input type="password" id="contrasenia" formControlName="contrasenia" placeholder="Ingresa tu contraseña">
-          <div *ngIf="loginForm.get('contrasenia')?.invalid && loginForm.get('contrasenia')?.touched" class="error">
-            <div *ngIf="loginForm.get('contrasenia')?.errors?.['required']">La contraseña es obligatoria.</div>
-            <div *ngIf="loginForm.get('contrasenia')?.errors?.['minlength']">
-              La contraseña debe tener al menos 6 caracteres.
+
+        <form [formGroup]="loginForm" (ngSubmit)="iniciarSesion()" class="login-form">
+          <!-- Campo de Correo -->
+          <div class="form-group">
+            <div class="input-wrapper">
+              <i class="fas fa-envelope input-icon"></i>
+              <input 
+                id="correo" 
+                formControlName="correo" 
+                placeholder="Ingresa tu correo"
+                [class.error-input]="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched"
+              >
+            </div>
+            <div *ngIf="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched" class="error-message">
+              <i class="fas fa-exclamation-circle"></i>
+              <span *ngIf="loginForm.get('correo')?.errors?.['required']">El correo es obligatorio</span>
+              <span *ngIf="loginForm.get('correo')?.errors?.['email']">Ingresa un correo válido</span>
             </div>
           </div>
-        </div>
-  
-        <!-- Botón de Iniciar Sesión -->
-        <button type="submit" [disabled]="loginForm.invalid" class="login-button">
-          <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
-        </button>
-  
-        <!-- Mensaje de error -->
-        <div *ngIf="mensaje" class="mensaje" [style.color]="mensajeColor">{{ mensaje }}</div>
-  
-        <!-- Registro -->
-        <div class="registro-prompt">
-          <p>¿No tienes cuenta? 
+    
+          <!-- Campo de Contraseña -->
+          <div class="form-group">
+            <div class="input-wrapper">
+              <i class="fas fa-lock input-icon"></i>
+              <input 
+                type="password" 
+                id="contrasenia" 
+                formControlName="contrasenia" 
+                placeholder="Ingresa tu contraseña"
+                [class.error-input]="loginForm.get('contrasenia')?.invalid && loginForm.get('contrasenia')?.touched"
+              >
+            </div>
+            <div *ngIf="loginForm.get('contrasenia')?.invalid && loginForm.get('contrasenia')?.touched" class="error-message">
+              <i class="fas fa-exclamation-circle"></i>
+              <span *ngIf="loginForm.get('contrasenia')?.errors?.['required']">La contraseña es obligatoria</span>
+              <span *ngIf="loginForm.get('contrasenia')?.errors?.['minlength']">
+                Mínimo 6 caracteres
+              </span>
+            </div>
+          </div>
+    
+          <!-- Botón de Iniciar Sesión -->
+          <button type="submit" [disabled]="loginForm.invalid" class="login-button">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Iniciar Sesión</span>
+            <div class="button-ripple"></div>
+          </button>
+    
+          <!-- Mensaje de respuesta -->
+          <div *ngIf="mensaje" class="mensaje" [ngClass]="{'success-message': mensajeColor === 'green', 'error-message-box': mensajeColor === 'red'}">
+            <i [class]="mensajeColor === 'green' ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
+            {{ mensaje }}
+          </div>
+    
+          <!-- Divisor -->
+          <div class="divider">
+            <span>o</span>
+          </div>
+
+          <!-- Registro -->
+          <div class="registro-section">
+            <p>¿No tienes cuenta?</p>
             <button type="button" class="registrar-button" (click)="irRegistro()">
-              <i class="fas fa-user-plus"></i> Registrarse
+              <i class="fas fa-user-plus"></i>
+              <span>Crear cuenta</span>
             </button>
-          </p>
-        </div>
-      </form>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-  
+</div>
